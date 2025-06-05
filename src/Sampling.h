@@ -4,7 +4,7 @@
 #include "VectorMath.h"
 
 class Sampler {
-	std::default_random_engine engine; //(rand_device());
+	std::default_random_engine engine; 
 	std::uniform_real_distribution<float> uniform; //(0.f, 1.f);
 public:
 	Sampler() {

@@ -15,6 +15,7 @@ public:
 		return origin;
 	}
 
+	// Ray-Sphere intersection
 	std::optional<ShapeIntersection> Intersect(const Ray& ray) override {
 		Vector3f ray_unit_direction = Normalize(ray.direction);
 		Vector3f ray_origin = ray.origin;
@@ -26,6 +27,7 @@ public:
 		float term = b * b - ((ray_origin - sphere_origin).LengthSquared() - radius * radius);
 
 		if (term >= 0) {
+			// Up to 2 possible intersection points (into and out of sphere)
 			float t1 = -b + std::sqrt(term);
 			bool t1_viable = t1 > 100 * std::numeric_limits<float>::epsilon();
 			float t2 = -b - std::sqrt(term);
@@ -33,6 +35,7 @@ public:
 			if (t1_viable || t2_viable) {
 				float t;
 				if (t1_viable && t2_viable) {
+					// Pick the closest intersection
 					t = std::min(t1, t2);
 				}
 				else if (t1_viable) {

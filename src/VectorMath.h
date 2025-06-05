@@ -67,7 +67,7 @@ Vector3f Normalize(Vector3f v);
 
 float Dot(Vector3f v, Vector3f w);
 
-float AngleBetween(Vector3f v1, Vector3f v2);
+//float AngleBetween(Vector3f v1, Vector3f v2);
 
 float AbsDot(Vector3f v1, Vector3f v2);
 
@@ -127,64 +127,7 @@ public:
 	}
 };
 
-
-/*
-class Vector2f
-{
-public:
-	Vector2f() : x(0), y(0) {}
-	Vector2f(float x, float y) : x(x), y(y) {}
-	float operator[](int i) const {
-		if (i == 0) return x;
-		return y;
-	}
-	float& operator[](int i) {
-		if (i == 0) return x;
-		return y;
-	}
-	Vector2f operator+(Vector2f other) const {
-		return Vector2f{ x + other.x, y + other.y };
-	}
-
-	Vector2f operator-(Vector2f other) const {
-		return Vector2f{ x - other.x, y - other.y };
-	}
-	Vector2f operator-() const {
-		return Vector2f{ -x, -y };
-	}
-
-	Vector2f& operator+=(const Vector2f other) {
-		(*this) = (*this) + other;
-		return *this;
-	}
-	Vector2f& operator-=(const Vector2f other) {
-		(*this) = (*this) - other;
-		return *this;
-	}
-
-	Vector2f operator*(float scalar) const {
-		return Vector2f{ x * scalar, y * scalar };
-	}
-	Vector2f operator/(float scalar) const {
-		return Vector2f{ x / scalar, y / scalar };
-	}
-
-	Vector2f operator*=(const float scalar) {
-		(*this) = (*this) * scalar;
-		return *this;
-	}
-	Vector2f operator/=(const float scalar) {
-		(*this) = (*this) / scalar;
-		return *this;
-	}
-
-	float LengthSquared() const { return x * x + y * y; }
-
-	float Length() const { return std::sqrt(LengthSquared()); }
-
-	float x, y;
-};
-*/
+// 2D points
 
 class Point2f {
 public:

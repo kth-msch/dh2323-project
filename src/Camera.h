@@ -2,11 +2,12 @@
 #include "VectorMath.h"
 #include "Ray.h"
 #include "Sampling.h"
+#include <functional>
 
 class Camera
 {
 public:
-	Vector3f position;
+	std::function<Vector3f(float)> position;
 	int pixelWidth, pixelHeight;
 	float filmWidth, filmHeight;
 	float distPerPixel;
@@ -18,7 +19,7 @@ public:
 	Vector3f* film;
 	int* sampleCount;
 
-	Camera(Vector3f position, float time, float shutterSpeed, int pixelWidth, int pixelHeight, float filmWidth, float focalLength, float focusDistance, float lensRadius) 
+	Camera(std::function<Vector3f(float)> position, float time, float shutterSpeed, int pixelWidth, int pixelHeight, float filmWidth, float focalLength, float focusDistance, float lensRadius)
 		: startTime(time), shutterSpeed(shutterSpeed), position(position), 
 		pixelWidth(pixelWidth), pixelHeight(pixelHeight), 
 		filmWidth(filmWidth), focalLength(focalLength),
@@ -57,9 +58,10 @@ public:
 
 		Point2f pointOnLens = lensRadius * UniformSampleDisk(dof_rand);
 		float focus_t = focusDistance / rayDirection.z;
-		Vector3f focusPoint = position + focus_t * rayDirection;
+		Vector3f positionAtTime = position(rayTime);
+		Vector3f focusPoint = positionAtTime + focus_t * rayDirection;
 
-		Vector3f rayOrigin = Vector3f(pointOnLens.u + position.x, pointOnLens.v + position.y, position.z);
+		Vector3f rayOrigin = Vector3f(pointOnLens.u + positionAtTime.x, pointOnLens.v + positionAtTime.y, positionAtTime.z);
 		rayDirection = Normalize(focusPoint - rayOrigin);
 
 		return Ray(rayOrigin, rayDirection, rayTime);
@@ -70,7 +72,8 @@ public:
 		float filmY = y * distPerPixel;
 
 		Vector3f rayDirection = Vector3f(filmX - filmWidth / 2, filmY - filmHeight / 2, focalLength);
-		Ray ray{ position, rayDirection, startTime };
+		Vector3f positionAtTime = position(0.f);
+		Ray ray{ positionAtTime, rayDirection, startTime };
 		return ray;
 	}
 

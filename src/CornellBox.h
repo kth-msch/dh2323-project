@@ -31,7 +31,7 @@ void LoadTestModel(std::vector<Triangle>& triangles)
 	Material red(color_red);
 	//Material red = transmit; // prism box
 	Material yellow(color_yellow);
-	//Material yellow = mirror; // note
+	//Material yellow = mirror; // mirror wall
 	Material green(color_green);
 	Material cyan(color_cyan);
 	Material blue(color_blue);

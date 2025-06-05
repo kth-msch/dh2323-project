@@ -1,6 +1,7 @@
 #pragma once
 #include "VectorMath.h"
 
+// This class is only used for point lights
 class Light
 {
 public:
@@ -9,4 +10,3 @@ public:
 
 	Light(Vector3f position, Vector3f color) : position(position), color(color) {}
 };
-

@@ -20,8 +20,9 @@ using namespace std;
 
 // ---------------------------------------------------------
 // GLOBAL VARIABLES
-const int SCREEN_WIDTH = 500;
-const int SCREEN_HEIGHT = 500;
+const int SCREEN_WIDTH = 250;
+const int SCREEN_HEIGHT = 250;
+const int NUM_SAMPLES = 16;
 SDL2Aux *sdlAux;
 
 // ---------------------------------------------------------
@@ -35,64 +36,53 @@ int main(int argc, char* argv[])
 {
 
 	cout << "Setting up... ";
-
-	// testing
-	//Vector3f vec(1, 1, 1);
-	//Point2f p(0.4, 1);
-	//Vector3f u = UniformSampleVectorHemisphere(p, vec);
-	//cout << "Vector hemisphere sample:" << u.x << "," << u.y << "," << u.z << endl;
-
-
-	// load scene
+	
+	// Load scene
 	Scene scene;
 	LoadScene(scene);
 
-	// setup camera
-	Vector3f cameraPosition = Vector3f(0, 0, -2);
-	//float focalLength = SCREEN_HEIGHT / 2;
+	// Setup camera
+	Vector3f staticPosition = Vector3f(0, 0, -2);
 
+	std::function<Vector3f(float)> movingPosition = [](float time) {
+		float x = time / 5.f - 0.1f;
+		return Vector3f(x, 0, -2);
+		};
 
+	// Temporal characteristics
 	float cameraStartTime = 0.f;
 	float shutterSpeed = 1.f;
 
-	//float angleOfView = 90.f; // deg
-	float focusDistance = 2.f; // focus 2 units in front of camera
-	//float fNumber = 32.f;
-	//float lensRadius = 0.1;
+	// Focus 2 units in front of camera
+	float focusDistance = 2.f; 
 
+	
 	float filmWidth = 0.035;
 	float focalLength = 0.020;
 	float lensRadius = 0.1;
 
-	//float fNumber = 1;
-	//lensRadius = (focalLength / fNumber) / 2; // diameter = focal length / f-number
-
-	// 	Camera(Vector3f position, float time, float shutterSpeed, int pixelWidth, int pixelHeight, float filmWidth, float focalLength, float focusDistance, float fNumber) 
-	Camera camera = Camera(cameraPosition, cameraStartTime, shutterSpeed, SCREEN_HEIGHT, SCREEN_WIDTH, filmWidth, focalLength, focusDistance, lensRadius);
+	Camera camera = Camera(movingPosition, cameraStartTime, shutterSpeed, SCREEN_HEIGHT, SCREEN_WIDTH, filmWidth, focalLength, focusDistance, lensRadius);
 
 	cout << "Set-up complete" << endl;
 	cout << "Rendering... " << endl;
 	int t = SDL_GetTicks();
 
-	// render scene
+	// Render scene
 	Sampler sampler;
-	int samplesPerPixel = 128;
-	for (int i = 0; i < samplesPerPixel; i++)
+	for (int i = 0; i < NUM_SAMPLES; i++)
 	{
 		int st = SDL_GetTicks();
 		RenderSample(camera, scene, sampler);
 		int sdt = SDL_GetTicks() - st;
-		//Draw(camera);
-		cout << i + 1 << "/" << samplesPerPixel << " samples rendered (" << sdt << " ms)" << endl;
+		cout << i + 1 << "/" << NUM_SAMPLES << " samples rendered (" << sdt << " ms)" << endl;
 	}
-
 
 	int dt = SDL_GetTicks() - t;
 	cout << "Render complete (" << dt << " ms)" << endl;
 	cout << "The image will now be drawn continuously" << endl;
 	cout << "Close the SDL window to save a screenshot" << endl;
 
-	// draw image
+	// Draw image
 	sdlAux = new SDL2Aux(SCREEN_WIDTH, SCREEN_HEIGHT);
 	Draw(camera);
 	sdlAux->saveBMP("screenshot.bmp");
@@ -127,21 +117,23 @@ void LoadScene(Scene& scene) {
 		scene.AddShape(tri);
 	}
 
+	// Below are various shapes that are added to the Cornell box to demonstrate and test different aspects of the renderer
+
 	/*
+	* // Static sphere
 	scene.AddSphere(
 		Sphere(
 			Vector3f(0, 0, 0),
 			0.3f,
 			Material(
-				Vector3f(1, 0, 0),
-				Vector3f(0, 0, 0),
-				Vector3f(0, 0, 0)
+				Vector3f(1, 0, 0)
 			)
 		)
 	);
 	*/
 
-	// moving sphere
+	/*
+	// Slightly moving red sphere (right to left)
 	scene.AddShape(
 		LinearAnimatedSphere(
 			Vector3f(0.1f, 0, 0),
@@ -154,27 +146,10 @@ void LoadScene(Scene& scene) {
 			)
 		)
 	);
-
-	/*
-	scene.AddTriangle(
-		Triangle(
-			Vector3f(0, 0, -1),
-			Vector3f(0, 0.5, -1),
-			Vector3f(0.5, 0.5, -1),
-			Vector3f(1, 1, 1),
-			Vector3f(1, 1, 1)
-		)
-	);
 	*/
 
-	Material whiteLight(
-		Vector3f(1, 1, 1),
-		Vector3f(1, 1, 1) * 70.f
-	);
-
-	/*
-	// emissive sphere
-	scene.AddSphere(
+	// Large emissive sphere
+	scene.AddShape(
 		Sphere(
 			Vector3f(0, -0.5, -0.7),
 			0.3f,
@@ -184,10 +159,10 @@ void LoadScene(Scene& scene) {
 			)
 		)
 	);
-	*/
+	
 		
 	/*
-	// point light
+	// Point light
 	scene.AddLight(
 		Light(
 			Vector3f(0, -0.5, -0.7),
@@ -195,6 +170,9 @@ void LoadScene(Scene& scene) {
 		)
 	);
 	*/
+
+	/*
+	// Spiralling emissive sphere
 
 	auto spiral = [](float time) {
 		float startTime = 0.f;
@@ -207,13 +185,56 @@ void LoadScene(Scene& scene) {
 
 		return Vector3f(x, y, z);
 	};
-
-	// moving emissive sphere
+	Material whiteLight(
+		Vector3f(1, 1, 1),
+		Vector3f(1, 1, 1) * 70.f
+	);
 	scene.AddShape(
 		CustomAnimatedSphere(
 			spiral,
 			0.1f,
 			whiteLight
+		)
+	);
+	*/
+
+	/*
+	// Spiralling red sphere
+
+	auto spiral2 = [](float time) {
+		float startTime = 0.f;
+		float endTime = 1.f;
+		time = std::clamp(time - startTime, 0.f, endTime - startTime) / (endTime - startTime);
+		float angle = 2 * time * 2 * PI + PI;
+		float x = std::cos(angle);
+		float z = std::sin(angle);
+		float y = 2 * time - 1;
+
+		return Vector3f(x, y, z);
+		};
+
+	scene.AddShape(
+		CustomAnimatedSphere(
+			spiral2,
+			0.1f,
+			Material(
+				Vector3f(1, 0, 0)
+			)
+		)
+	);
+	*/
+
+	// Slightly moving red sphere (left to right)
+	scene.AddShape(
+		LinearAnimatedSphere(
+			Vector3f(-0.1f, 0, 0),
+			Vector3f(0.1f, 0, 0),
+			0.f,
+			1.f,
+			0.2f,
+			Material(
+				Vector3f(1, 0, 0)
+			)
 		)
 	);
 	

@@ -20,6 +20,7 @@ public:
         normal = Normalize(Cross(e2, e1));
     }
 
+	// Ray-Triangle intersection
     std::optional<ShapeIntersection> Intersect(const Ray& ray) override {
 		Vector3f e1 = v1 - v0;
 		Vector3f e2 = v2 - v0;

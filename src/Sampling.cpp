@@ -18,8 +18,8 @@ Vector3f UniformSampleHemisphere(const Point2f& p) {
 	return Vector3f(r * std::cos(phi), r * std::sin(phi), z);
 }
 
+// Malley's method
 Vector3f CosineSampleHemisphere(const Point2f& p) {
-	// Malley's method
 	Point2f d = UniformSampleDisk(p);
 	float z = std::sqrt(std::max(0.f, 1.f - d.u * d.u - d.v * d.v));
 	return Vector3f(d.u, d.v, z);

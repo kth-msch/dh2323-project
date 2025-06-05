@@ -56,7 +56,7 @@ public:
 		return closest;
 	}
 
-	 Vector3f LambertianIllumination(const ShapeIntersection& isct) const {
+	Vector3f LambertianIllumination(const ShapeIntersection& isct) const {
 		 Vector3f reflected;
 		 for (auto& light : lights) {
 			 Vector3f partialReflected;
@@ -64,11 +64,11 @@ public:
 			 Vector3f vecToLight = light->position - isct.position;
 			 Ray rayToLight{ isct.position, vecToLight, isct.time };
 
-			 // look for shadows
+			 // Look for shadows
 			 std::optional<ShapeIntersection> light_isct = ClosestIntersection(rayToLight);
 			 if (light_isct) {
 				 if (light_isct->tHit < 1.f) {
-					 // in shadow
+					 // In shadow
 					 continue;
 				 }
 			 }
@@ -81,10 +81,5 @@ public:
 		 Vector3f ambient = Vector3f(0.5f, 0.5f, 0.5f);
 		 Vector3f intensity = Hadamard(isct.material.diffuseReflection, ambient + reflected);
 		 return intensity;
-	 }
-
-	 Vector3f PhongIllumination(const ShapeIntersection& isct) const {
-		 Vector3f total;
-		 return total;
-	 }
+	}
 };

@@ -12,9 +12,11 @@ float Dot(Vector3f v, Vector3f w) {
 	return v.x * w.x + v.y * w.y + v.z * w.z;
 }
 
+/*
 float AngleBetween(Vector3f v1, Vector3f v2) {
-	return std::acos(Dot(v1, v2)); // technically inaccurate
+	return std::acos(Dot(v1, v2)); // technically inaccurate?
 }
+*/
 
 float AbsDot(Vector3f v1, Vector3f v2) {
 	return std::abs(Dot(v1, v2));
@@ -54,6 +56,7 @@ std::ostream& operator<<(std::ostream& os, const Vector3f& v) {
 	return os;
 }
 
+// 2D points
 
 Point2f operator*(const float& scalar, const Point2f& p)
 {
