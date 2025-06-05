@@ -23,7 +23,19 @@ include_directories(
 )
 
 add_executable(DH2323ProjectSDL2
-  Drawer.cpp
+  ${CMAKE_SOURCE_DIR}/Drawer.cpp
+  ${CMAKE_SOURCE_DIR}/src/AnimatedSphere.cpp 
+  ${CMAKE_SOURCE_DIR}/src/Camera.cpp 
+  ${CMAKE_SOURCE_DIR}/src/Light.cpp 
+  ${CMAKE_SOURCE_DIR}/src/Material.cpp 
+  ${CMAKE_SOURCE_DIR}/src/PathTracer.cpp 
+  ${CMAKE_SOURCE_DIR}/src/Ray.cpp 
+  ${CMAKE_SOURCE_DIR}/src/Sampling.cpp 
+  ${CMAKE_SOURCE_DIR}/src/Scene.cpp 
+  ${CMAKE_SOURCE_DIR}/src/Shape.cpp 
+  ${CMAKE_SOURCE_DIR}/src/Sphere.cpp 
+  ${CMAKE_SOURCE_DIR}/src/Triangle.cpp 
+  ${CMAKE_SOURCE_DIR}/src/VectorMath.cpp 
   ${CMAKE_SOURCE_DIR}/SDL2Auxiliary/SDL2Auxiliary.cpp
 )
 
