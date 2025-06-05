@@ -109,3 +109,27 @@ This image uses 256 samples per pixel and took about an hour.
 The above method used a naive distribution of the rays. Below is the same image, rendered with the same number of samples, using a better distribution:
 
 ![Path tracing with 256 spp and a cosine-weighted hemisphere distribution](img/pt_256spp_coshem.bmp)
+
+## Entry 5: Beyond the blur
+
+Motion blur isn't very interesting without interesting motions. So let's fix that.
+
+Below is a spiralling light source, because why not?
+
+![Spiralling light source](img/spiral.bmp)
+
+Note how there is a lot more noise in the scene. Path tracing works best with large light sources, since the paths have to actually find their way to the light source. The above scene only has a small spherical light source, giving limited light at each point in time.
+
+To brighten things up, we can add back our large center lamp.
+
+![Spiralling light source with center lamp](img/spiral3.bmp)
+
+That's better.
+
+Interestingly, the above image also had a red sphere spiralling in tandem with the light source. Did you miss it? If you really zoom in, you can see some red dots. That's what's left of it.
+
+This happens because the background dominates over the samples. The contribution by the red (non-emissive) sphere to each pixel is so small when you consider the entire shutter time. Hence, it basically becomes invisible. The same thing happens in real photographs. Sufficiently strong emissive lights can, however, dominate the image even if they are spread out over their path of motion.
+
+Next, let's move the camera as well! Below is an image rendered with a moving red sphere where the camera also moves to follow it in parallel. Now, it remains sharp while everything else in the scene is blurred.
+
+![Following an object with the camera](img/center_stage.bmp)
